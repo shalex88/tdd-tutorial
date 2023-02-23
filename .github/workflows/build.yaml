@@ -1,0 +1,32 @@
+name: Build and Run
+
+on:
+  push:
+  pull_request:
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Get repo name
+        id: repo-name
+        run: echo "value=$(echo "${{ github.repository }}" | awk -F '/' '{print $2}')" >> $GITHUB_OUTPUT
+
+      - name: Configure
+        run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+      - name: Build
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
+
+      - name: Test
+        run: cd ./build/$sub_project && ./$bin
+        env:
+          sub_project: tests
+          bin: ${{ steps.repo-name.outputs.value }}_test
