@@ -14,7 +14,7 @@ TEST(sprintf, NoFormatOperations) {
   EXPECT_EQ(char(0xaa), output[4]);
 }
 
-TEST(sprintf, InstertString) {
+TEST(sprintf, InsertString) {
     char output[20] {};
 
     EXPECT_EQ(12, sprintf(output, "Hello %s\n", "World"));
