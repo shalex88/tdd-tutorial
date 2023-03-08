@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
-project(tdd-tutorial VERSION 1.0.0 LANGUAGES CXX)
+project(led VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -11,5 +11,9 @@ else()
     message(WARNING "Unknown Compiler ${CMAKE_CXX_COMPILER_ID}")
 endif()
 
-add_subdirectory(example1)
-add_subdirectory(example2)
+include_directories(include)
+file(GLOB_RECURSE sourceFiles CONFIGURE_DEPENDS "source/*.cpp")
+
+add_executable(${PROJECT_NAME} ${sourceFiles})
+
+add_subdirectory(tests)

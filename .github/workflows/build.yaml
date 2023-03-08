@@ -25,8 +25,14 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{env.BUILD_TYPE}}
 
-      - name: Test
+      - name: Test sprintf
         run: cd ./build/$sub_project && ./$bin
         env:
-          sub_project: tests
-          bin: ${{ steps.repo-name.outputs.value }}_test
+          sub_project: example1
+          bin: sprintf_test
+
+      - name: Test led
+        run: cd ./build/$sub_project && ./$bin
+        env:
+          sub_project: example2
+          bin: led_test
