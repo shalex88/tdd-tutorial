@@ -11,7 +11,7 @@ TEST(sprintf, NoFormatOperations) {
 
   /* Test for memory corruption */
   memset(output, 0xaa, sizeof(output));
-  EXPECT_EQ(char(0xaa), output[4]);
+  EXPECT_EQ(char(0xbb), output[4]);
 }
 
 TEST(sprintf, InsertString) {
