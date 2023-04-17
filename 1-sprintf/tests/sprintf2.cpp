@@ -3,15 +3,15 @@
 /* Add your project include files here */
 
 /* 2 - Test fixture for multiple tests */
-class sprintf_test : public testing::Test {
+class sprintfTestFixture : public testing::Test {
 public:
     char output[100];
     const char *expected;
-    sprintf_test() {
+    sprintfTestFixture() {
         memset(output, 0xaa, sizeof(output));
         expected = "";
     };
-    ~sprintf_test() override = default;
+    ~sprintfTestFixture() override = default;
     void expect(const char *s) {
         expected = s;
     }
@@ -22,12 +22,12 @@ public:
     }
 };
 
-TEST_F(sprintf_test, NoFormatOperations) {
+TEST_F(sprintfTestFixture, NoFormatOperations) {
     expect("hey");
     given(sprintf(output, "hey"));
 }
 
-TEST_F(sprintf_test, InsertString) {
+TEST_F(sprintfTestFixture, InsertString) {
     expect("Hello World\n");
     given(sprintf(output, "%s\n", "Hello World"));
 }

@@ -3,7 +3,7 @@
 /* Add your project include files here */
 
 /* 1 - Simple test */
-TEST(sprintf, NoFormatOperations) {
+TEST(sprintfSimpleTest, NoFormatOperations) {
   char output[5] {};
 
   EXPECT_EQ(3, sprintf(output, "hey"));
@@ -14,7 +14,7 @@ TEST(sprintf, NoFormatOperations) {
   EXPECT_EQ(char(0xaa), output[4]);
 }
 
-TEST(sprintf, InsertString) {
+TEST(sprintfSimpleTest, InsertString) {
     char output[20] {};
 
     EXPECT_EQ(12, sprintf(output, "Hello %s\n", "World"));

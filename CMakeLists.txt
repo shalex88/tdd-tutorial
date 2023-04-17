@@ -1,15 +1,11 @@
 cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
-project(tdd-tutorial VERSION 1.0.0 LANGUAGES CXX)
+project(tdd-tutorial LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_compile_options(-Wall -Wextra -Wpedantic)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    add_compile_options(/W3)
-else()
-    message(WARNING "Unknown Compiler ${CMAKE_CXX_COMPILER_ID}")
 endif()
 
-add_subdirectory(example1)
-add_subdirectory(example2)
+add_subdirectory(1-sprintf)
+add_subdirectory(2-led)

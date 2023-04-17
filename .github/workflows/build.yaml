@@ -25,14 +25,14 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{env.BUILD_TYPE}}
 
-      - name: Test sprintf
+      - name: Test 1-sprintf
         run: cd ./build/$sub_project/tests && ./$bin
         env:
-          sub_project: example1
+          sub_project: 1-sprintf
           bin: sprintf_test
 
       - name: Test led
         run: cd ./build/$sub_project/tests && ./$bin
         env:
-          sub_project: example2
+          sub_project: 2-led
           bin: led_test
