@@ -16,4 +16,4 @@ list(REMOVE_ITEM sourceFiles "${CMAKE_CURRENT_SOURCE_DIR}/../source/main.cpp")
 file(GLOB_RECURSE testFiles CONFIGURE_DEPENDS "*.cpp")
 
 add_executable(${PROJECT_NAME} ${sourceFiles} ${testFiles})
-target_link_libraries(${PROJECT_NAME} gtest gtest_main)
+target_link_libraries(${PROJECT_NAME} gtest gtest_main gmock)

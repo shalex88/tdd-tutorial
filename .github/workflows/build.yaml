@@ -31,7 +31,7 @@ jobs:
           sub_project: 1-sprintf
           bin: sprintf_test
 
-      - name: Test led
+      - name: Test 2-led
         run: cd ./build/$sub_project/tests && ./$bin
         env:
           sub_project: 2-led
