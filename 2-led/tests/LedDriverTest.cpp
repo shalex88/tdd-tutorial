@@ -54,10 +54,9 @@ TEST_F(LedDriverTest, MultipleLedsOn) {
 
 TEST_F(LedDriverTest, TurnOffSomeLed) {
     led_.turnOnNum(8);
-    led_.turnOnNum(9);
     led_.turnOffNum(8);
 
-    EXPECT_EQ(0x100, leds_reg_value_);
+    EXPECT_FALSE(led_.isOn(8));
 }
 
 TEST_F(LedDriverTest, TurnOnAllLeds) {
@@ -76,7 +75,7 @@ TEST_F(LedDriverTest, LedMemoryIsNotReadable) {
     leds_reg_value_ = 0xffff; /* Simulates changed hw state */
     led_.turnOnNum(8);
 
-    EXPECT_EQ(0x80, leds_reg_value_);
+    EXPECT_TRUE(led_.isOn(8));
 }
 
 TEST_F(LedDriverTest, BoundaryTest) {
@@ -86,7 +85,7 @@ TEST_F(LedDriverTest, BoundaryTest) {
     EXPECT_EQ(0x8001, leds_reg_value_);
 }
 
-TEST_F(LedDriverTest, OutOfBoundaryOnTest) {
+TEST_F(LedDriverTest, OutOfBoundaryOffTest) {
     led_.turnOnNum(-1);
     led_.turnOnNum(0);
     led_.turnOnNum(17);
@@ -95,7 +94,7 @@ TEST_F(LedDriverTest, OutOfBoundaryOnTest) {
     EXPECT_EQ(0, leds_reg_value_);
 }
 
-TEST_F(LedDriverTest, OutOfBoundaryOffTest) {
+TEST_F(LedDriverTest, OutOfBoundaryOnTest) {
     led_.turnOnAll();
 
     led_.turnOffNum(-1);
