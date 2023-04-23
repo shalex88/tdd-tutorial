@@ -1,32 +1,31 @@
 #include <iostream>
-//#include <error.h>
 #include "LedDriver.h"
 
-enum class LEDS_STATE {
-    ALL_ON = ~0,
-    ALL_OFF = ~ALL_ON
+enum class LedsState {
+    kAllOn = ~0,
+    kAllOff = ~kAllOn
 };
 
 LedDriver::LedDriver(uint16_t* p_register) : p_leds_reg_(p_register) {
-    leds_image = static_cast<uint16_t>(LEDS_STATE::ALL_OFF);
-    update_hw();
+    leds_image_ = static_cast<uint16_t>(LedsState::kAllOff);
+    updateHw();
 }
 
-void LedDriver::update_hw() const {
-    *p_leds_reg_ = leds_image;
+void LedDriver::updateHw() const {
+    *p_leds_reg_ = leds_image_;
 }
 
-void LedDriver::turn_on_num(const uint8_t led_number) {
+void LedDriver::turnOnNum(const uint8_t led_number) {
     if(isValidLed(led_number)) {
-        leds_image |= (1 << (led_number - 1));
-        update_hw();
+        leds_image_ |= (1 << (led_number - 1));
+        updateHw();
     }
 }
 
-void LedDriver::turn_off_num(const uint8_t led_number) {
+void LedDriver::turnOffNum(const uint8_t led_number) {
     if(isValidLed(led_number)) {
-        leds_image &= ~(1 << (led_number - 1));
-        update_hw();
+        leds_image_ &= ~(1 << (led_number - 1));
+        updateHw();
     }
 }
 
@@ -38,12 +37,12 @@ bool LedDriver::isValidLed(const uint8_t led_number) const {
     return is_valid;
 }
 
-void LedDriver::turn_on_all() {
-    leds_image = static_cast<uint16_t>(LEDS_STATE::ALL_ON);
-    update_hw();
+void LedDriver::turnOnAll() {
+    leds_image_ = static_cast<uint16_t>(LedsState::kAllOn);
+    updateHw();
 }
 
-void LedDriver::turn_off_all() {
-    leds_image = static_cast<uint16_t>(LEDS_STATE::ALL_OFF);
-    update_hw();
+void LedDriver::turnOffAll() {
+    leds_image_ = static_cast<uint16_t>(LedsState::kAllOff);
+    updateHw();
 }

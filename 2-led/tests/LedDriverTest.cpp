@@ -30,75 +30,75 @@ TEST_F(LedDriverTest, LedsOffAfterInit) {
 }
 
 TEST_F(LedDriverTest, SingleLedOn) {
-  led.turn_on_num(1);
+    led.turnOnNum(1);
 
   EXPECT_EQ(0x1, leds_reg_value);
 }
 
 TEST_F(LedDriverTest, SingleLedOff) {
-  led.turn_on_num(2);
-  led.turn_off_num(2);
+    led.turnOnNum(2);
+    led.turnOffNum(2);
 
   EXPECT_EQ(0, leds_reg_value);
 }
 
 TEST_F(LedDriverTest, MultipleLedsOn) {
-  led.turn_on_num(8);
-  led.turn_on_num(9);
+    led.turnOnNum(8);
+    led.turnOnNum(9);
 
   EXPECT_EQ(0x180, leds_reg_value);
 }
 
 TEST_F(LedDriverTest, TurnOffSomeLed) {
-  led.turn_on_num(8);
-  led.turn_on_num(9);
-  led.turn_off_num(8);
+    led.turnOnNum(8);
+    led.turnOnNum(9);
+    led.turnOffNum(8);
 
   EXPECT_EQ(0x100, leds_reg_value);
 }
 
 TEST_F(LedDriverTest, TurnOnAllLeds) {
-  led.turn_on_all();
+    led.turnOnAll();
 
   EXPECT_EQ(0xffff, leds_reg_value);
 }
 
 TEST_F(LedDriverTest, TurnOffAllLeds) {
-  led.turn_off_all();
+    led.turnOffAll();
 
   EXPECT_EQ(0, leds_reg_value);
 }
 
 TEST_F(LedDriverTest, LedMemoryIsNotReadable) {
   leds_reg_value = 0xffff; /* Simulates changed hw state */
-  led.turn_on_num(8);
+    led.turnOnNum(8);
 
   EXPECT_EQ(0x80, leds_reg_value);
 }
 
 TEST_F(LedDriverTest, BoundaryTest) {
-  led.turn_on_num(1);
-  led.turn_on_num(16);
+    led.turnOnNum(1);
+    led.turnOnNum(16);
 
   EXPECT_EQ(0x8001, leds_reg_value);
 }
 
 TEST_F(LedDriverTest, OutOfBoundaryOnTest) {
-  led.turn_on_num(-1);
-  led.turn_on_num(0);
-  led.turn_on_num(17);
-  led.turn_on_num(3141);
+    led.turnOnNum(-1);
+    led.turnOnNum(0);
+    led.turnOnNum(17);
+    led.turnOnNum(3141);
 
   EXPECT_EQ(0, leds_reg_value);
 }
 
 TEST_F(LedDriverTest, OutOfBoundaryOffTest) {
-   led.turn_on_all();
+    led.turnOnAll();
 
-  led.turn_off_num(-1);
-  led.turn_off_num(0);
-  led.turn_off_num(17);
-  led.turn_off_num(3141);
+    led.turnOffNum(-1);
+    led.turnOffNum(0);
+    led.turnOffNum(17);
+    led.turnOffNum(3141);
 
   EXPECT_EQ(0xffff, leds_reg_value);
 }
@@ -110,7 +110,7 @@ TEST_F(LedDriverTest, OutOfBoundaryRuntimeError) {
     std::cerr.rdbuf(capture_cerr.rdbuf());
 
     // Call the function you want to test
-    led.turn_off_num(0);
+    led.turnOffNum(0);
 
     // Restore the original cerr buffer
     std::cerr.rdbuf(original_cerr_buffer);

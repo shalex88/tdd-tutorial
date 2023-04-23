@@ -8,16 +8,15 @@ public:
     LedDriver() = delete;
     explicit LedDriver(uint16_t* p_register);
     ~LedDriver() = default;
-    void turn_on_num(uint8_t led_number);
-    void turn_off_num(uint8_t led_number);
-    void turn_on_all();
-    void turn_off_all();
+    void turnOnNum(uint8_t led_number);
+    void turnOffNum(uint8_t led_number);
+    void turnOnAll();
+    void turnOffAll();
 private:
     uint16_t* p_leds_reg_ {nullptr};
-    uint16_t leds_image;
-    void update_hw() const;
-
-    bool isValidLed(const uint8_t led_number) const;
+    uint16_t leds_image_;
+    void updateHw() const;
+    bool isValidLed(uint8_t led_number) const;
 };
 
 
