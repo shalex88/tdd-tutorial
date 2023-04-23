@@ -6,6 +6,11 @@ enum class LedsState {
     kAllOff = ~kAllOn
 };
 
+enum class LedsNum {
+    kLedFirst = 1,
+    kLedLast = 16
+};
+
 LedDriver::LedDriver(uint16_t* p_register) : p_leds_reg_(p_register) {
     leds_image_ = static_cast<uint16_t>(LedsState::kAllOff);
     updateHw();
@@ -30,10 +35,11 @@ void LedDriver::turnOffNum(const uint8_t led_number) {
 }
 
 bool LedDriver::isValidLed(const uint8_t led_number) const {
-    bool is_valid {led_number >= 1 && led_number <= 16};
+    bool is_valid {static_cast<LedsNum>(led_number) >= LedsNum::kLedFirst && static_cast<LedsNum>(led_number) <= LedsNum::kLedLast};
     if (!is_valid) {
         std::cerr << "ERROR: Invalid LED Number " << static_cast<int>(led_number) << std::endl;
     }
+
     return is_valid;
 }
 
