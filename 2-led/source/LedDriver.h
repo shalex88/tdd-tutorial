@@ -12,11 +12,15 @@ public:
     void turnOffNum(uint8_t led_number);
     void turnOnAll();
     void turnOffAll();
+    bool isOn(uint8_t led_number);
 private:
     uint16_t* p_leds_reg_ {nullptr};
     uint16_t leds_image_;
     void updateHw() const;
     bool isValidLed(uint8_t led_number) const;
+    void setLedBit(uint8_t led_number);
+    void clearLedBit(uint8_t led_number);
+    uint16_t convertLedNumToBit(uint8_t led_number) const;
 };
 
 
