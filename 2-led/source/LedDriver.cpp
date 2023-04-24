@@ -2,8 +2,8 @@
 #include "LedDriver.h"
 
 enum class LedsState {
-    kAllOn = ~0,
-    kAllOff = ~kAllOn
+    kAllOff = ~0,
+    kAllOn = ~kAllOff
 };
 
 enum class LedsNum {
@@ -34,14 +34,14 @@ void LedDriver::updateHw() const {
 
 void LedDriver::turnOnNum(const uint8_t led_number) {
     if(isValidLed(led_number)) {
-        setLedBit(led_number);
+        clearLedBit(led_number);
         updateHw();
     }
 }
 
 void LedDriver::turnOffNum(const uint8_t led_number) {
     if(isValidLed(led_number)) {
-        clearLedBit(led_number);
+        setLedBit(led_number);
         updateHw();
     }
 }
@@ -68,8 +68,12 @@ void LedDriver::turnOffAll() {
 
 bool LedDriver::isOn(uint8_t led_number) {
     if(isValidLed(led_number)) {
-        return leds_image_ & convertLedNumToBit(led_number);
+        return !(leds_image_ & convertLedNumToBit(led_number));
     }
 
     return false;
+}
+
+uint16_t LedDriver::getRegisterValue() const {
+    return *p_leds_reg_;
 }

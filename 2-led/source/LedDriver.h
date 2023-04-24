@@ -13,6 +13,7 @@ public:
     void turnOnAll();
     void turnOffAll();
     bool isOn(uint8_t led_number);
+    uint16_t getRegisterValue() const;
 private:
     uint16_t* p_leds_reg_ {nullptr};
     uint16_t leds_image_;
