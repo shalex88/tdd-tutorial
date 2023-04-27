@@ -1,22 +1,21 @@
 #include <ostream>
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-/* Add your project include files here */
+// Add your project include files here
 #include "../source/LedDriver.h"
 
-/* TODO:
- * + All LEDs are off after the driver is initialized
- * + A single LED can be turned on
- * + A single LED can be turned off
- * + Multiple LEDs can be turned on/off
- * + Turn on all LEDs
- * + Turn off all LEDs
- * + Get single LED state
- * + Check boundary values
- * + Check out-of-bounds values
- */
+// TESTS LIST:
+// + All LEDs are off after the driver is initialized
+// + A single LED can be turned on
+// + A single LED can be turned off
+// + Multiple LEDs can be turned on/off
+// + Turn on all LEDs
+// + Turn off all LEDs
+// + Get single LED state
+// + Check boundary values
+// + Check out-of-bounds values
 
-/* 2 - Test fixture for multiple tests */
+// Test fixture for multiple tests
 class LedDriverTest : public testing::Test {
 public:
     LedDriverTest() : led_(LedDriver(&leds_reg_value_)) {};
