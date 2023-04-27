@@ -1,16 +1,6 @@
 #include <iostream>
 #include "LedDriver.h"
 
-enum class LedsState {
-    kAllOff = ~0,
-    kAllOn = ~kAllOff
-};
-
-enum class LedsNum {
-    kLedFirst = 1,
-    kLedLast = 16
-};
-
 LedDriver::LedDriver(uint16_t* p_register) : p_leds_reg_(p_register) {
     leds_image_ = static_cast<uint16_t>(LedsState::kAllOff);
     updateHw();
@@ -34,14 +24,14 @@ void LedDriver::updateHw() const {
 
 void LedDriver::turnOnNum(const uint8_t led_number) {
     if(isValidLed(led_number)) {
-        clearLedBit(led_number);
+        setLedBit(led_number);
         updateHw();
     }
 }
 
 void LedDriver::turnOffNum(const uint8_t led_number) {
     if(isValidLed(led_number)) {
-        setLedBit(led_number);
+        clearLedBit(led_number);
         updateHw();
     }
 }
@@ -68,7 +58,7 @@ void LedDriver::turnOffAll() {
 
 bool LedDriver::isOn(uint8_t led_number) {
     if(isValidLed(led_number)) {
-        return !(leds_image_ & convertLedNumToBit(led_number));
+        return leds_image_ & convertLedNumToBit(led_number);
     }
 
     return false;

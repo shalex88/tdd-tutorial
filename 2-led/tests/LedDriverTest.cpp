@@ -21,12 +21,8 @@ public:
     LedDriverTest() : led_(LedDriver(&leds_reg_value_)) {};
     ~LedDriverTest() override = default;
 
-    uint16_t leds_reg_value_{static_cast<uint16_t>(LedsState::kAllOn)};
     LedDriver led_;
-    enum class LedsState {
-        kAllOff = ~0,
-        kAllOn = ~kAllOff
-    };
+    uint16_t leds_reg_value_{static_cast<uint16_t>(LedDriver::LedsState::kAllOn)};
 };
 
 TEST_F(LedDriverTest, LedsOffAfterInit) {
@@ -66,17 +62,17 @@ TEST_F(LedDriverTest, TurnOffSomeLed) {
 TEST_F(LedDriverTest, TurnOnAllLeds) {
     led_.turnOnAll();
 
-    EXPECT_EQ(0, led_.getRegisterValue());
+    EXPECT_EQ(static_cast<uint16_t>(LedDriver::LedsState::kAllOn), led_.getRegisterValue());
 }
 
 TEST_F(LedDriverTest, TurnOffAllLeds) {
     led_.turnOffAll();
 
-    EXPECT_EQ(0xffff, led_.getRegisterValue());
+    EXPECT_EQ(static_cast<uint16_t>(LedDriver::LedsState::kAllOff), led_.getRegisterValue());
 }
 
 TEST_F(LedDriverTest, LedMemoryIsNotReadable) {
-    leds_reg_value_ = static_cast<uint16_t>(LedsState::kAllOn); /* Simulates changed hw state */
+    leds_reg_value_ = static_cast<uint16_t>(LedDriver::LedsState::kAllOn); /* Simulates changed hw state */
     led_.turnOnNum(8);
 
     EXPECT_TRUE(led_.isOn(8));
@@ -96,7 +92,7 @@ TEST_F(LedDriverTest, OutOfBoundaryOffTest) {
     led_.turnOnNum(17);
     led_.turnOnNum(3141);
 
-    EXPECT_EQ(static_cast<uint16_t>(LedsState::kAllOff), led_.getRegisterValue());
+    EXPECT_EQ(static_cast<uint16_t>(LedDriver::LedsState::kAllOff), led_.getRegisterValue());
 }
 
 TEST_F(LedDriverTest, OutOfBoundaryOnTest) {
@@ -107,7 +103,7 @@ TEST_F(LedDriverTest, OutOfBoundaryOnTest) {
     led_.turnOffNum(17);
     led_.turnOffNum(3141);
 
-    EXPECT_EQ(static_cast<uint16_t>(LedsState::kAllOn), led_.getRegisterValue());
+    EXPECT_EQ(static_cast<uint16_t>(LedDriver::LedsState::kAllOn), led_.getRegisterValue());
 }
 
 TEST_F(LedDriverTest, OutOfBoundaryRuntimeError) {
