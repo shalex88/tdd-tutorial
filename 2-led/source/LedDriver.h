@@ -21,10 +21,6 @@ public:
         kAllOff = ~kAllOn
     };
 
-    enum class LedsNum {
-        kLedFirst = 1,
-        kLedLast = 16
-    };
 private:
     uint16_t *p_leds_reg_{nullptr};
     uint16_t leds_image_;
@@ -32,7 +28,8 @@ private:
     bool isValidLed(uint8_t led_number) const;
     void setLedBit(uint8_t led_number);
     void clearLedBit(uint8_t led_number);
-    uint16_t convertLedNumToBit(uint8_t led_number) const;
+    uint16_t convertLedNumToBitMask(uint8_t led_number) const;
+    bool isActiveLow();
 };
 
 #endif //TDD_TUTORIAL_LEDDRIVER_H

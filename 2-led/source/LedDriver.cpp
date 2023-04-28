@@ -1,23 +1,28 @@
 #include <iostream>
 #include "LedDriver.h"
 
+enum class LedsNum {
+    kLedFirst = 1,
+    kLedLast = 16
+};
+
 LedDriver::LedDriver(uint16_t* p_register) : p_leds_reg_(p_register) {
     leds_image_ = static_cast<uint16_t>(LedsState::kAllOff);
     updateHw();
 }
 
-uint16_t LedDriver::convertLedNumToBit(const uint8_t led_number) const {
+uint16_t LedDriver::convertLedNumToBitMask(const uint8_t led_number) const {
 //    If LED lables were switched and 1->16,2->15
 //    return (1 << (16 - led_number));
     return (1 << (led_number - 1));
 }
 
 void LedDriver::setLedBit(const uint8_t led_number) {
-    leds_image_ |= convertLedNumToBit(led_number);
+    leds_image_ |= convertLedNumToBitMask(led_number);
 }
 
 void LedDriver::clearLedBit(const uint8_t led_number) {
-    leds_image_ &= ~convertLedNumToBit(led_number);
+    leds_image_ &= ~convertLedNumToBitMask(led_number);
 }
 
 void LedDriver::updateHw() const {
@@ -26,14 +31,22 @@ void LedDriver::updateHw() const {
 
 void LedDriver::turnOnNum(const uint8_t led_number) {
     if(isValidLed(led_number)) {
-        setLedBit(led_number);
+        if(isActiveLow()) {
+            clearLedBit(led_number);
+        }else{
+            setLedBit(led_number);
+        }
         updateHw();
     }
 }
 
 void LedDriver::turnOffNum(const uint8_t led_number) {
     if(isValidLed(led_number)) {
-        clearLedBit(led_number);
+        if(isActiveLow()) {
+            setLedBit(led_number);
+        }else{
+            clearLedBit(led_number);
+        }
         updateHw();
     }
 }
@@ -60,7 +73,11 @@ void LedDriver::turnOffAll() {
 
 bool LedDriver::isOn(uint8_t led_number) {
     if(isValidLed(led_number)) {
-        return leds_image_ & convertLedNumToBit(led_number);
+        uint16_t value = (leds_image_ & convertLedNumToBitMask(led_number));
+        if(isActiveLow()) {
+            value = !value;
+        }
+        return value;
     }
 
     return false;
@@ -68,4 +85,14 @@ bool LedDriver::isOn(uint8_t led_number) {
 
 uint16_t LedDriver::getRegisterValue() const {
     return *p_leds_reg_;
+}
+
+bool LedDriver::isActiveLow() {
+    bool is_active_low{false};
+
+    if(static_cast<uint16_t>(LedsState::kAllOn) == 0) {
+        is_active_low = true;
+    }
+
+    return is_active_low;
 }
