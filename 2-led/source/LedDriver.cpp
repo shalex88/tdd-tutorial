@@ -7,7 +7,9 @@ LedDriver::LedDriver(uint16_t* p_register) : p_leds_reg_(p_register) {
 }
 
 uint16_t LedDriver::convertLedNumToBit(const uint8_t led_number) const {
-    return (1 << (led_number - 1)); /* If LED lables were switched and 1->16,2->15 change to (16 - led_number) */
+//    If LED lables were switched and 1->16,2->15
+//    return (1 << (16 - led_number));
+    return (1 << (led_number - 1));
 }
 
 void LedDriver::setLedBit(const uint8_t led_number) {
