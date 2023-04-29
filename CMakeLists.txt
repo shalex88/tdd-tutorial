@@ -9,3 +9,4 @@ endif()
 
 add_subdirectory(1-sprintf)
 add_subdirectory(2-led)
+add_subdirectory(3-home_atomation)
