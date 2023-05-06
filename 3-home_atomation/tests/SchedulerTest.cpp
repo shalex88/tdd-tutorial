@@ -1,4 +1,3 @@
-#include <ostream>
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 // Add your project include files here
@@ -19,7 +18,7 @@
 // Remove non-existent event
 // Multiple scheduled events at the same time
 // Multiple scheduled events for the same light
-// Remove non scheduled light schedule
+// Remove non-scheduled light schedule
 // Schedule the maximum supported number of events (128)
 // Schedule too many events
 
@@ -37,12 +36,12 @@ public:
 
 class SchedulerTest : public testing::Test {
 public:
-    SchedulerTest() {
-        scheduler = new Scheduler(&time_service_mock, &light_controller_mock);
-    }
-    TimeServiceMock time_service_mock;
-    LightControllerMock light_controller_mock;
-    Scheduler *scheduler {};
+    SchedulerTest() : time_service_mock(std::make_shared<TimeServiceMock>()),
+                      light_controller_mock(std::make_shared<LightControllerMock>()),
+                      scheduler(std::make_shared<Scheduler>(time_service_mock, light_controller_mock)) {}
+    std::shared_ptr<TimeServiceMock> time_service_mock;
+    std::shared_ptr<LightControllerMock> light_controller_mock;
+    std::shared_ptr<Scheduler> scheduler;
     const uint8_t kLightId = 1;
 };
 
@@ -61,18 +60,18 @@ TEST_F(SchedulerTest, ScheduleEvent) {
 TEST_F(SchedulerTest, ScheduleAndTriggerOn) {
     scheduler->addEvent(kLightId, ITimeService::Day::kMonday, 1200, ILightController::State::kOn);
 
-    EXPECT_CALL(time_service_mock, getTime())
+    EXPECT_CALL(*time_service_mock, getTime())
             .WillOnce(testing::Return(ITimeService::Time{ITimeService::Day::kMonday, 1200}));
-    EXPECT_CALL(light_controller_mock, turnOn(kLightId));
+    EXPECT_CALL(*light_controller_mock, turnOn(kLightId));
     scheduler->triggerEvent();
 }
 
 TEST_F(SchedulerTest, ScheduleAndTriggerOff) {
     scheduler->addEvent(kLightId, ITimeService::Day::kMonday, 1200, ILightController::State::kOff);
 
-    EXPECT_CALL(time_service_mock, getTime())
+    EXPECT_CALL(*time_service_mock, getTime())
             .WillOnce(testing::Return(ITimeService::Time{ITimeService::Day::kMonday, 1200}));
-    EXPECT_CALL(light_controller_mock, turnOff(kLightId));
+    EXPECT_CALL(*light_controller_mock, turnOff(kLightId));
     scheduler->triggerEvent();
 }
 

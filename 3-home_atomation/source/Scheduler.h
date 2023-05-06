@@ -2,6 +2,8 @@
 #define TDD_TUTORIAL_SCHEDULER_H
 
 #include <cstdint>
+#include <memory>
+#include <vector>
 #include "ITimeService.h"
 #include "ILightController.h"
 
@@ -12,15 +14,15 @@ public:
         ITimeService::Time time;
         ILightController::State light_state;
     };
-    Scheduler(ITimeService *time_service, ILightController *light_controller);
+    Scheduler(std::shared_ptr<ITimeService> time_service, std::shared_ptr<ILightController> light_controller);
     ~Scheduler() = default;
-    void addEvent(uint8_t light_id, ITimeService::Day day, int time, ILightController::State state);
-    void triggerEvent();
+    void addEvent(const uint8_t light_id, const ITimeService::Day day, const int time, const ILightController::State state);
+    void triggerEvent() const;
     Event getNextEvent() const;
 private:
-    ITimeService *time_service_;
-    ILightController *light_controller_;
-    Event event_ {};
+    std::shared_ptr<ITimeService> time_service_;
+    std::shared_ptr<ILightController> light_controller_;
+    Event event_{};
 };
 
 
