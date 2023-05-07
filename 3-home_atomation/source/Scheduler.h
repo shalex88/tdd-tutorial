@@ -20,6 +20,7 @@ public:
     Scheduler(std::shared_ptr<ITimeService> time_service, std::shared_ptr<ILightController> light_controller);
     ~Scheduler() = default;
     void addEvent(const uint8_t light_id, const ITimeService::Day day, const int time, const ILightController::State state);
+    void removeEvent(const Event event_to_remove);
     void triggerEvent();
     Event getLastAddedEvent() const;
 

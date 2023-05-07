@@ -59,6 +59,14 @@ TEST_F(SchedulerTest, ScheduleEvent) {
     EXPECT_EQ(event.light_state, expected_event.light_state);
 }
 
+TEST_F(SchedulerTest, UnscheduleEvent) {
+    uint8_t light_id = 1;
+
+    scheduler->addEvent(light_id, ITimeService::Day::kMonday, 1200, ILightController::State::kOn);
+    scheduler->removeEvent(scheduler->getLastAddedEvent());
+    // TODO: check for no events
+}
+
 TEST_F(SchedulerTest, ScheduleTwoEvents) {
     uint8_t light_id = 1;
 

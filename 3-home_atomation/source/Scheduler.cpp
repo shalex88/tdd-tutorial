@@ -33,6 +33,7 @@ void Scheduler::triggerEvent() {
 }
 
 Scheduler::Event Scheduler::getLastAddedEvent() const {
+    // TODO: return only if not empty
     std::cout << events_.back() << std::endl;
     return events_.back();
 }
@@ -41,4 +42,13 @@ std::ostream &operator<<(std::ostream &os, const Scheduler::Event &event) {
     os << "[ " << event.light_id << " " << static_cast<int>(event.light_state) << " "
        << static_cast<int>(event.time.day) << " " << event.time.minute << " ]";
     return os;
+}
+
+void Scheduler::removeEvent(const Scheduler::Event event_to_remove) {
+    for (auto it = events_.begin(); it != events_.end();) {
+        if ((event_to_remove.time.day == it->time.day) && (event_to_remove.time.minute == it->time.minute) &&
+            (event_to_remove.light_id == it->light_id) && (event_to_remove.light_state == it->light_state)) {
+            it = events_.erase(it);
+        }
+    }
 }
