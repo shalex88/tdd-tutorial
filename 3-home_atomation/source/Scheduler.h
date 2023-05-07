@@ -17,12 +17,12 @@ public:
     Scheduler(std::shared_ptr<ITimeService> time_service, std::shared_ptr<ILightController> light_controller);
     ~Scheduler() = default;
     void addEvent(const uint8_t light_id, const ITimeService::Day day, const int time, const ILightController::State state);
-    void triggerEvent() const;
-    Event getNextEvent() const;
+    void triggerEvent();
+    Event getLastAddedEvent() const;
 private:
     std::shared_ptr<ITimeService> time_service_;
     std::shared_ptr<ILightController> light_controller_;
-    Event event_{};
+    std::vector<Event> events_;
 };
 
 

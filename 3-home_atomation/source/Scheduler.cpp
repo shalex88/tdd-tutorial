@@ -7,23 +7,29 @@ Scheduler::Scheduler(std::shared_ptr<ITimeService> time_service, std::shared_ptr
 }
 
 void Scheduler::addEvent(const uint8_t light_id, const ITimeService::Day day, const int time, const ILightController::State state) {
-    event_.light_id = light_id;
-    event_.time.day = day;
-    event_.time.minute = time;
-    event_.light_state = state;
+    Event event{light_id,
+                {day, time},
+                state};
+    events_.push_back(event);
 }
 
-void Scheduler::triggerEvent() const {
+void Scheduler::triggerEvent() {
     auto time = time_service_->getTime();
-    if ((time.day == event_.time.day) && (time.minute == event_.time.minute)) {
-        if (event_.light_state == ILightController::State::kOn) {
-            light_controller_->turnOn(event_.light_id);
+
+    for (auto it = events_.begin(); it != events_.end();) {
+        if ((time.day == it->time.day) && (time.minute == it->time.minute)) {
+            if (it->light_state == ILightController::State::kOn) {
+                light_controller_->turnOn(it->light_id);
+            } else {
+                light_controller_->turnOff(it->light_id);
+            }
+            it = events_.erase(it);
         } else {
-            light_controller_->turnOff(event_.light_id);
+            ++it;
         }
     }
 }
 
-Scheduler::Event Scheduler::getNextEvent() const {
-    return event_;
+Scheduler::Event Scheduler::getLastAddedEvent() const {
+    return events_.back();
 }
