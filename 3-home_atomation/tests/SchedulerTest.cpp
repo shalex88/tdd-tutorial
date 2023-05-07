@@ -45,61 +45,65 @@ public:
 };
 
 TEST_F(SchedulerTest, ScheduleEvent) {
-    const uint8_t kLightId = 1;
+    uint8_t light_id = 1;
 
-    scheduler->addEvent(kLightId, ITimeService::Day::kMonday, 1200, ILightController::State::kOn);
+    scheduler->addEvent(light_id, ITimeService::Day::kMonday, 1200, ILightController::State::kOn);
 
-    Scheduler::Event expected_event{kLightId,
+    Scheduler::Event expected_event{light_id,
                                     {ITimeService::Day::kMonday, 1200},
                                     ILightController::State::kOn};
-    EXPECT_EQ(scheduler->getLastAddedEvent().light_state, expected_event.light_state);
-    EXPECT_EQ(scheduler->getLastAddedEvent().time.day, expected_event.time.day);
-    EXPECT_EQ(scheduler->getLastAddedEvent().time.minute, expected_event.time.minute);
-    EXPECT_EQ(scheduler->getLastAddedEvent().light_state, expected_event.light_state);
+    auto event = scheduler->getLastAddedEvent();
+    EXPECT_EQ(event.light_state, expected_event.light_state);
+    EXPECT_EQ(event.time.day, expected_event.time.day);
+    EXPECT_EQ(event.time.minute, expected_event.time.minute);
+    EXPECT_EQ(event.light_state, expected_event.light_state);
 }
 
 TEST_F(SchedulerTest, ScheduleTwoEvents) {
-    const uint8_t kLightId = 1;
+    uint8_t light_id = 1;
 
-    scheduler->addEvent(kLightId, ITimeService::Day::kMonday, 1200, ILightController::State::kOn);
+    scheduler->addEvent(light_id, ITimeService::Day::kMonday, 1200, ILightController::State::kOn);
 
-    Scheduler::Event expected_event1{kLightId,
-                                    {ITimeService::Day::kMonday, 1200},
-                                    ILightController::State::kOn};
-    EXPECT_EQ(scheduler->getLastAddedEvent().light_state, expected_event1.light_state);
-    EXPECT_EQ(scheduler->getLastAddedEvent().time.day, expected_event1.time.day);
-    EXPECT_EQ(scheduler->getLastAddedEvent().time.minute, expected_event1.time.minute);
-    EXPECT_EQ(scheduler->getLastAddedEvent().light_state, expected_event1.light_state);
+    Scheduler::Event expected_event1{light_id,
+                                     {ITimeService::Day::kMonday, 1200},
+                                     ILightController::State::kOn};
+    auto event = scheduler->getLastAddedEvent();
+    EXPECT_EQ(event.light_state, expected_event1.light_state);
+    EXPECT_EQ(event.time.day, expected_event1.time.day);
+    EXPECT_EQ(event.time.minute, expected_event1.time.minute);
+    EXPECT_EQ(event.light_state, expected_event1.light_state);
 
-    scheduler->addEvent(kLightId, ITimeService::Day::kTuesday, 1400, ILightController::State::kOff);
-    Scheduler::Event expected_event2{kLightId,
-                                    {ITimeService::Day::kTuesday, 1400},
-                                    ILightController::State::kOff};
-    EXPECT_EQ(scheduler->getLastAddedEvent().light_state, expected_event2.light_state);
-    EXPECT_EQ(scheduler->getLastAddedEvent().time.day, expected_event2.time.day);
-    EXPECT_EQ(scheduler->getLastAddedEvent().time.minute, expected_event2.time.minute);
-    EXPECT_EQ(scheduler->getLastAddedEvent().light_state, expected_event2.light_state);
+    light_id = 2;
+    scheduler->addEvent(light_id, ITimeService::Day::kEveryday, 1400, ILightController::State::kOff);
+    Scheduler::Event expected_event2{light_id,
+                                     {ITimeService::Day::kEveryday, 1400},
+                                     ILightController::State::kOff};
+    event = scheduler->getLastAddedEvent();
+    EXPECT_EQ(event.light_state, expected_event2.light_state);
+    EXPECT_EQ(event.time.day, expected_event2.time.day);
+    EXPECT_EQ(event.time.minute, expected_event2.time.minute);
+    EXPECT_EQ(event.light_state, expected_event2.light_state);
 }
 
 TEST_F(SchedulerTest, ScheduleAndTriggerOn) {
-    const uint8_t kLightId = 1;
+    uint8_t light_id = 1;
 
-    scheduler->addEvent(kLightId, ITimeService::Day::kMonday, 1200, ILightController::State::kOn);
+    scheduler->addEvent(light_id, ITimeService::Day::kMonday, 1200, ILightController::State::kOn);
 
     EXPECT_CALL(*time_service_mock, getTime())
             .WillOnce(testing::Return(ITimeService::Time{ITimeService::Day::kMonday, 1200}));
-    EXPECT_CALL(*light_controller_mock, turnOn(kLightId));
+    EXPECT_CALL(*light_controller_mock, turnOn(light_id));
     scheduler->triggerEvent();
 }
 
 TEST_F(SchedulerTest, ScheduleAndTriggerOff) {
-    const uint8_t kLightId = 1;
+    uint8_t light_id = 1;
 
-    scheduler->addEvent(kLightId, ITimeService::Day::kMonday, 1200, ILightController::State::kOff);
+    scheduler->addEvent(light_id, ITimeService::Day::kMonday, 1200, ILightController::State::kOff);
 
     EXPECT_CALL(*time_service_mock, getTime())
             .WillOnce(testing::Return(ITimeService::Time{ITimeService::Day::kMonday, 1200}));
-    EXPECT_CALL(*light_controller_mock, turnOff(kLightId));
+    EXPECT_CALL(*light_controller_mock, turnOff(light_id));
     scheduler->triggerEvent();
 }
 
