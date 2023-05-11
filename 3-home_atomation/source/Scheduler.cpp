@@ -18,7 +18,7 @@ void Scheduler::addEvent(const uint8_t light_id, const ITimeService::Day day, co
 
 void Scheduler::triggerEvent() {
     auto current_date = time_service_->getTime();
-
+    // TODO: use find(events.begin(), events.end(), event)
     for (auto it = events_.begin(); it != events_.end();) {
         if (((current_date.day == it->time.day) || (it->time.day == ITimeService::Day::kEveryday)) &&
             (current_date.minute == it->time.minute)) {
@@ -32,19 +32,21 @@ void Scheduler::triggerEvent() {
     }
 }
 
-Scheduler::Event Scheduler::getLastAddedEvent() const {
-    // TODO: return only if not empty
+std::optional<Event> Scheduler::getLastAddedEvent() const {
+    if (events_.empty()) {
+        return  std::nullopt;
+    }
     std::cout << events_.back() << std::endl;
     return events_.back();
 }
 
-std::ostream &operator<<(std::ostream &os, const Scheduler::Event &event) {
+std::ostream &operator<<(std::ostream &os, const Event &event) {
     os << "[ " << event.light_id << " " << static_cast<int>(event.light_state) << " "
        << static_cast<int>(event.time.day) << " " << event.time.minute << " ]";
     return os;
 }
 
-void Scheduler::removeEvent(const Scheduler::Event event_to_remove) {
+void Scheduler::removeEvent(const Event &event_to_remove) {
     for (auto it = events_.begin(); it != events_.end();) {
         if ((event_to_remove.time.day == it->time.day) && (event_to_remove.time.minute == it->time.minute) &&
             (event_to_remove.light_id == it->light_id) && (event_to_remove.light_state == it->light_state)) {
