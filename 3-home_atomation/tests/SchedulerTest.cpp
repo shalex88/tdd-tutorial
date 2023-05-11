@@ -50,8 +50,8 @@ TEST_F(SchedulerTest, ScheduleEvent) {
     scheduler->addEvent(light_id, ITimeService::Day::kMonday, 1200, ILightController::State::kOn);
 
     Event expected_event{light_id,
-                                    {ITimeService::Day::kMonday, 1200},
-                                    ILightController::State::kOn};
+                         {ITimeService::Day::kMonday, 1200},
+                         ILightController::State::kOn};
     auto event = scheduler->getLastAddedEvent();
 
     EXPECT_EQ(event.value().light_state, expected_event.light_state);
@@ -77,8 +77,8 @@ TEST_F(SchedulerTest, ScheduleTwoEvents) {
     scheduler->addEvent(light_id, ITimeService::Day::kMonday, 1200, ILightController::State::kOn);
 
     Event expected_event1{light_id,
-                                     {ITimeService::Day::kMonday, 1200},
-                                     ILightController::State::kOn};
+                          {ITimeService::Day::kMonday, 1200},
+                          ILightController::State::kOn};
     auto event = scheduler->getLastAddedEvent();
 
     EXPECT_EQ(event.value().light_state, expected_event1.light_state);
@@ -89,9 +89,10 @@ TEST_F(SchedulerTest, ScheduleTwoEvents) {
     light_id = 2;
     scheduler->addEvent(light_id, ITimeService::Day::kEveryday, 1400, ILightController::State::kOff);
     Event expected_event2{light_id,
-                                     {ITimeService::Day::kEveryday, 1400},
-                                     ILightController::State::kOff};
+                          {ITimeService::Day::kEveryday, 1400},
+                          ILightController::State::kOff};
     event = scheduler->getLastAddedEvent();
+
     EXPECT_EQ(event.value().light_state, expected_event2.light_state);
     EXPECT_EQ(event.value().time.day, expected_event2.time.day);
     EXPECT_EQ(event.value().time.minute, expected_event2.time.minute);
