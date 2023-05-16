@@ -31,6 +31,7 @@ private:
     std::shared_ptr<ITimeService> time_service_;
     std::shared_ptr<ILightController> light_controller_;
     std::vector<Event> events_{};
+    static const uint8_t kMaxEvents{128};
 };
 
 #endif //TDD_TUTORIAL_SCHEDULER_H

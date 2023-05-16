@@ -4,23 +4,23 @@
 #include "../source/Scheduler.h"
 
 // TESTS LIST:
-// Lights are not changed at initialization
-// Time is wrong, day is wrong, no lights are changed
-// Day is right, time is wrong, no lights are changed
-// Day is wrong, time is right, no lights are changed
-// Day is right, time is right, the right light is turned on
-// Day is right, time is right, the right light is turned off
-// Schedule every day
-// Schedule a specific day
-// Schedule all weekdays
-// Schedule weekend days
-// Remove scheduled event
-// Remove non-existent event
-// Multiple scheduled events at the same time
-// Multiple scheduled events for the same light
-// Remove non-scheduled light schedule
-// Schedule the maximum supported number of events (128)
-// Schedule too many events
+// - Schedule every day
+// - Schedule a specific day
+// - Schedule all weekdays
+// - Schedule weekend days
+// - Remove scheduled event
+// - Remove non-existent event
+// - Schedule the maximum supported number of events (128)
+// + Schedule too many events
+// - Multiple scheduled events at the same time
+// - Multiple scheduled events for the same light
+// - Lights are not changed at initialization
+// - Time is wrong, day is wrong, no lights are changed
+// - Day is right, time is wrong, no lights are changed
+// - Day is wrong, time is right, no lights are changed
+// - Day is right, time is right, the right light is turned on
+// - Day is right, time is right, the right light is turned off
+// - Remove non-scheduled light schedule
 
 class TimeServiceMock : public ITimeService {
 public:
@@ -119,6 +119,26 @@ TEST_F(SchedulerTest, ScheduleAndTriggerOff) {
             .WillOnce(testing::Return(ITimeService::Time{ITimeService::Day::kMonday, 1200}));
     EXPECT_CALL(*light_controller_mock, turnOff(light_id));
     scheduler->triggerEvent();
+}
+
+TEST_F(SchedulerTest, ScheduleMoreThan128Events) {
+    // Save the original cerr buffer and redirect cerr to a custom stringstream
+    std::streambuf *original_cerr_buffer = std::cerr.rdbuf();
+    std::ostringstream capture_cerr;
+    std::cerr.rdbuf(capture_cerr.rdbuf());
+
+    const uint8_t kLightId = 1;
+
+    for (uint32_t i{}; i < 130; ++i) {
+        scheduler->addEvent(kLightId, ITimeService::Day::kMonday, 1200, ILightController::State::kOff);
+    }
+
+    // Restore the original cerr buffer
+    std::cerr.rdbuf(original_cerr_buffer);
+
+    // Compare the captured output with the expected output
+    std::string expected_output = "ERROR: Max events number reached";
+    EXPECT_THAT(capture_cerr.str(), ::testing::HasSubstr(expected_output));
 }
 
 

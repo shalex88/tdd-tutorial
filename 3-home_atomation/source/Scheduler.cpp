@@ -28,10 +28,14 @@ bool Event::operator!=(const Event &rhs) const {
 
 void Scheduler::addEvent(const uint8_t light_id, const ITimeService::Day day, const int time,
                          const ILightController::State state) {
-    Event event{light_id,
-                {day, time},
-                state};
-    events_.push_back(event);
+    if (events_.size() <= kMaxEvents) {
+        Event event{light_id,
+                    {day, time},
+                    state};
+        events_.push_back(event);
+    } else {
+        std::cerr << "ERROR: Max events number reached" << std::endl;
+    }
 }
 
 void Scheduler::triggerEvent() {
