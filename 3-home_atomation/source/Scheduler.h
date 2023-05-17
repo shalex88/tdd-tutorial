@@ -10,7 +10,7 @@
 #include "ILightController.h"
 
 struct Event {
-    int light_id;
+    uint32_t light_id;
     ITimeService::Time time;
     ILightController::State light_state;
     friend std::ostream &operator<<(std::ostream &os, const Event &event);
@@ -22,7 +22,7 @@ class Scheduler {
 public:
     Scheduler(std::shared_ptr<ITimeService> time_service, std::shared_ptr<ILightController> light_controller);
     ~Scheduler() = default;
-    void addEvent(const uint8_t light_id, const ITimeService::Day day, const int time, const ILightController::State state);
+    void addEvent(const uint32_t light_id, const ITimeService::Day day, const int time, const ILightController::State state);
     void removeEvent(const Event &event_to_remove);
     void triggerEvent();
     std::optional<Event> getLastAddedEvent() const;
