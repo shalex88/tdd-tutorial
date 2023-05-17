@@ -36,3 +36,9 @@ jobs:
         env:
           sub_project: 2-led
           bin: led_test
+
+      - name: Test 3-home_automation
+        run: cd ./build/$sub_project/tests && ./$bin
+        env:
+          sub_project: 3-home_automation
+          bin: home_automation_test
