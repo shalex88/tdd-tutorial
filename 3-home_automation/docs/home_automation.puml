@@ -1,0 +1,59 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam classAttributeIconSize 0
+
+interface IObserver {
+    +{abstract}update()
+}
+
+interface IObservable {
+    +{abstract}attach(IObserver)
+    +{abstract}detach(IObserver)
+    +{abstract}notifyObservers()
+}
+
+class LightScheduler implements IObserver {
+    -events_: std::vector<Event>
+    -light_controller_: std::shared_ptr<ILightController>
+    -time_service_: std::shared_ptr<ITimeService>
+    +addEvent()
+    +removeEvent()
+    +update()
+    -triggerEvent()
+}
+
+object Client {
+    auto time_service = std::make_shared<TimeServiceMock>()
+    auto light_controller = std::make_shared<LightControllerMock>()
+    auto scheduler = std::make_shared<Scheduler>(time_service, light_controller)
+    time_service->attach(scheduler);
+    scheduler->addEvent(1, ITimeService::Day::kEveryday, 1200, ILightController::State::kOn);
+}
+
+interface ILightController {
+    +{abstract}turnOn()
+    +{abstract}turnOff()
+}
+
+interface ITimeService {
+    +{abstract}getTime()
+}
+
+class LightDriver implements ILightController {
+    +turnOn()
+    +turnOff()
+}
+
+class LinuxTimeService implements ITimeService, IObservable {
+    -observers_: std::vector<std::shared_ptr<IObserver>>
+    +attach(IObserver)
+    +detach(IObserver)
+    +notifyObservers()
+    +getTime()
+}
+
+Client --> LightScheduler
+LightScheduler -- ILightController
+LightScheduler -- ITimeService
+
+@enduml

@@ -32,6 +32,7 @@ private:
     std::shared_ptr<ILightController> light_controller_;
     std::vector<Event> events_{};
     static const uint8_t kMaxEvents{128};
+    bool matchesCurrentTime(const ITimeService::Time &current_date, const Event &event) const;
 };
 
 #endif //TDD_TUTORIAL_SCHEDULER_H

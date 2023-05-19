@@ -46,8 +46,7 @@ void Scheduler::triggerEvent() {
     auto current_date = time_service_->getTime();
 
     for (const auto &kEvent: events_) {
-        if (((current_date.day == kEvent.time.day) || (kEvent.time.day == ITimeService::Day::kEveryday)) &&
-            (current_date.minute == kEvent.time.minute)) {
+        if (matchesCurrentTime(current_date, kEvent)) {
             if (kEvent.light_state == ILightController::State::kOn) {
                 light_controller_->turnOn(kEvent.light_id);
             } else {
@@ -55,6 +54,11 @@ void Scheduler::triggerEvent() {
             }
         }
     }
+}
+
+bool Scheduler::matchesCurrentTime(const ITimeService::Time &current_date, const Event &event) const {
+    return ((current_date.day == event.time.day) || (event.time.day == ITimeService::Day::kEveryday)) &&
+           (current_date.minute == event.time.minute);
 }
 
 std::optional<Event> Scheduler::getLastAddedEvent() const {
