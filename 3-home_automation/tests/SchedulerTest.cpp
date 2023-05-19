@@ -3,24 +3,25 @@
 // Add your project include files here
 #include "../source/Scheduler.h"
 
-// TESTS LIST:
-// + Schedule every day
-// + Schedule a specific day
-// - Schedule all weekdays
-// + Schedule multiple events
-// + Schedule the maximum supported number of events (128)
-// + Schedule too many events
-// + Schedule multiple same events
-// - Scheduled multiple events at the same time
-// - Schedule multiple events for the same light
-// + Remove scheduled event
-// + Remove non-existent event
-// - Lights are not changed at initialization
-// - Time is wrong, day is wrong, no lights are changed
-// - Day is right, time is wrong, no lights are changed
-// - Day is wrong, time is right, no lights are changed
-// - Day is right, time is right, the right light is turned on
-// - Day is right, time is right, the right light is turned off
+/* TEST PLAN:
+----------------------
+- Test LightScheduler:
+  - Given an empty event list, when update() is called, no events should be triggered.
+  - Given an event with a specific time and state, when the current time matches the event time, the corresponding light should be turned on/off.
+  - Given multiple events with different times and states, when the current time matches one of the events, only the corresponding light should be turned on/off.
+  - Given an event with an invalid light ID, when update() is called, an error should be logged.
+  - Given an event with an invalid time, when update() is called, an error should be logged.
+- Test LightDriver:
+  - Given a valid light ID, when turnOn() is called, the corresponding light should be turned on.
+  - Given a valid light ID, when turnOff() is called, the corresponding light should be turned off.
+  - Given an invalid light ID, when turnOn() is called, an error should be logged.
+  - Given an invalid light ID, when turnOff() is called, an error should be logged.
+- Test LinuxTimeService:
+  - Given an attached observer, when getTime() is called, the current time should be returned.
+  - Given a detached observer, when getTime() is called, an error should be logged.
+  - Given multiple attached observers, when notifyObservers() is called, all attached observers should be notified.
+  - Given an observer attached to multiple time services, when notifyObservers() is called, only the corresponding time service's observer should be notified.
+*/
 
 class TimeServiceMock : public ITimeService {
 public:

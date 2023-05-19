@@ -3,57 +3,94 @@
 skinparam classAttributeIconSize 0
 
 interface IObserver {
-    +{abstract}update()
+    +{abstract} update(): void
 }
 
 interface IObservable {
-    +{abstract}attach(IObserver)
-    +{abstract}detach(IObserver)
-    +{abstract}notifyObservers()
+    +{abstract} attach(IObserver): void
+    +{abstract} detach(IObserver): void
+    +{abstract} notifyObservers(): void
+}
+
+struct Event {
+    +lightId: uint32_t
+    +time: Time
+    +lightState: State
+}
+
+interface ILightController {
+    +{abstract} turnOn(id): void
+    +{abstract} turnOff(id): void
+    +{abstract} getState(id): State
+}
+
+enum Day {
+    kMonday
+    kTuesday
+    kWednesday
+    kThursday
+    kFriday
+    kSaturday
+    kSunday
+    kEveryday
+}
+
+struct Time {
+    +day: Day
+    +minute: int
+}
+
+interface ITimeService {
+    +{abstract} getTime(): Time
 }
 
 class LightScheduler implements IObserver {
     -events_: std::vector<Event>
-    -light_controller_: std::shared_ptr<ILightController>
-    -time_service_: std::shared_ptr<ITimeService>
-    +addEvent()
-    +removeEvent()
-    +update()
-    -triggerEvent()
-}
-
-object Client {
-    auto time_service = std::make_shared<TimeServiceMock>()
-    auto light_controller = std::make_shared<LightControllerMock>()
-    auto scheduler = std::make_shared<Scheduler>(time_service, light_controller)
-    time_service->attach(scheduler);
-    scheduler->addEvent(1, ITimeService::Day::kEveryday, 1200, ILightController::State::kOn);
-}
-
-interface ILightController {
-    +{abstract}turnOn()
-    +{abstract}turnOff()
-}
-
-interface ITimeService {
-    +{abstract}getTime()
-}
-
-class LightDriver implements ILightController {
-    +turnOn()
-    +turnOff()
+    -lightController_: std::shared_ptr<ILightController>
+    -timeService_: std::shared_ptr<ITimeService>
+    +addEvent(lightId: uint32_t, time: Time, state: State): void
+    +removeEvent(event: Event): void
+    +update(): void
+    -triggerEvent(): void
 }
 
 class LinuxTimeService implements ITimeService, IObservable {
     -observers_: std::vector<std::shared_ptr<IObserver>>
-    +attach(IObserver)
-    +detach(IObserver)
-    +notifyObservers()
-    +getTime()
+    +attach(IObserver): void
+    +detach(IObserver): void
+    +notifyObservers(): void
+    +getTime(): Time
+}
+
+enum State {
+    kOn
+    kOff
+}
+
+class LightDriver implements ILightController {
+    +turnOn(id): void
+    +turnOff(id): void
+    +getState(id): State
+}
+
+object Client {
+    auto time_service = std::make_shared<LinuxTimeService>()
+    auto light_controller = std::make_shared<LightDriver>()
+    auto scheduler = std::make_shared<LightScheduler>(time_service, light_controller)
+    time_service->attach(scheduler);
+    auto event = Event{1, {ITimeService::Day::kEveryday, 1200}, ILightController::State::kOn};
+    scheduler->addEvent(event);
 }
 
 Client --> LightScheduler
+
+LightScheduler *-- Event
 LightScheduler -- ILightController
 LightScheduler -- ITimeService
+
+Time --> Day
+ITimeService *-- Time
+
+ILightController --> State
 
 @enduml
