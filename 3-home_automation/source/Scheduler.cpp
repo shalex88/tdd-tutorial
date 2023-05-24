@@ -17,7 +17,7 @@ std::ostream &operator<<(std::ostream &os, const Event &event) {
 
 bool Event::operator==(const Event &rhs) const {
     return light_id == rhs.light_id &&
-           (time.day == rhs.time.day || time.day == ITimeService::Day::kEveryday) &&
+           time.day == rhs.time.day &&
            time.minute == rhs.time.minute &&
            light_state == rhs.light_state;
 }
