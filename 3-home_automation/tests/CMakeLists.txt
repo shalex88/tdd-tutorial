@@ -17,3 +17,6 @@ file(GLOB_RECURSE testFiles CONFIGURE_DEPENDS "*.cpp")
 
 add_executable(${PROJECT_NAME} ${sourceFiles} ${testFiles})
 target_link_libraries(${PROJECT_NAME} gtest gtest_main gmock)
+
+target_compile_options(${PROJECT_NAME} PRIVATE --coverage)
+target_link_options(${PROJECT_NAME} PRIVATE --coverage)

@@ -9,21 +9,11 @@ Scheduler::Scheduler(std::shared_ptr<ITimeService> time_service, std::shared_ptr
           light_controller_(std::move(light_controller)) {
 }
 
-std::ostream &operator<<(std::ostream &os, const Event &event) {
-    os << "[ " << event.light_id << " " << static_cast<int>(event.light_state) << " "
-       << static_cast<int>(event.time.day) << " " << event.time.minute << " ]";
-    return os;
-}
-
 bool Event::operator==(const Event &rhs) const {
     return light_id == rhs.light_id &&
            time.day == rhs.time.day &&
            time.minute == rhs.time.minute &&
            light_state == rhs.light_state;
-}
-
-bool Event::operator!=(const Event &rhs) const {
-    return !(rhs == *this);
 }
 
 void Scheduler::addEvent(const uint32_t light_id, const ITimeService::Day day, const int time,
